@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "highlight"
+version = "0.1.0"
+description = "Colorize text in your terminal :rainbow:"
+authors = ["Terry Spotts <tspotts@etsy.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+rich = "^13.5.2"
+click = "^8.1.6"
+
+[tool.poetry.scripts]
+highlight = "highlight:cli"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
