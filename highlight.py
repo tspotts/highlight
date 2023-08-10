@@ -2,37 +2,61 @@ import re
 
 import click
 
-# TODO: add params for each color variant with regex validated ParamType
+# TODO: limits opts to 1 or make multiple work?
+# TODO: flags for bright-mode, case insensitive regex
+# TODO: better docs
+# TODO: dev guide
 
-# bright_black
-# bright_blue
-# bright_cyan
-# bright_green
-# bright_magenta
-# bright_red
-# bright_white
-# bright_yellow
+
+class ValidRegexParamType(click.ParamType):
+    name = "regex"
+
+    def convert(self, value, param, ctx):
+        try:
+            return re.compile(fr"(?P<{param.name}>{value})")
+        except re.error:
+            self.fail(f"{value!r} is not a valid regex", param, ctx)
+
+
+VALID_REGEX = ValidRegexParamType()
 
 
 def apply_style(matchobj):
     key, value = matchobj.groupdict().popitem()
-    return click.style(value, fg=key)
+    return click.style(value, fg=f"bright_{key}")
 
 
 @click.command()
 @click.version_option()
 @click.argument("input_file", type=click.File("rt"), default="-", )
-@click.option("--blue", )
-def cli(input_file, blue):
+@click.option("--black", type=VALID_REGEX)
+@click.option("--blue", type=VALID_REGEX)
+@click.option("--cyan", type=VALID_REGEX)
+@click.option("--green", type=VALID_REGEX)
+@click.option("--magenta", type=VALID_REGEX)
+@click.option("--red", type=VALID_REGEX)
+@click.option("--white", type=VALID_REGEX)
+@click.option("--yellow", type=VALID_REGEX)
+def cli(input_file, black, blue, cyan, green, magenta, red, white, yellow):
     """
     Read from input file specified or stdin.
     """
-
-    blue_regex = re.compile(fr"(?P<blue>\b{blue}\b)", re.IGNORECASE) if blue else None
-    # red_regex = re.compile(r"(?P<red>\bof\b)", re.IGNORECASE)
-
     for line in input_file:
-        if blue_regex is not None:
-            line = blue_regex.sub(apply_style, line)
-    #    line = red_regex.sub(apply_style, line)
+        if black is not None:
+            line = black.sub(apply_style, line)
+        if blue is not None:
+            line = blue.sub(apply_style, line)
+        if cyan is not None:
+            line = cyan.sub(apply_style, line)
+        if green is not None:
+            line = green.sub(apply_style, line)
+        if magenta is not None:
+            line = magenta.sub(apply_style, line)
+        if red is not None:
+            line = red.sub(apply_style, line)
+        if white is not None:
+            line = white.sub(apply_style, line)
+        if yellow is not None:
+            line = yellow.sub(apply_style, line)
+
         click.echo(line, nl=False)
