@@ -1,19 +1,19 @@
-[tool.poetry]
+[project]
 name = "highlight"
-version = "0.1.0"
+version = "0.0.0"
 description = "Colorize text in your terminal :rainbow:"
-authors = ["Terry Spotts <tspotts@etsy.com>"]
-license = "MIT"
+authors = [{ "name" = "Terry Spotts", "email" = "tspotts@etsy.com" }]
+license = { text = "MIT" }
 readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["click>=8.1"]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-rich = "^13.5.2"
-click = "^8.1.6"
-
-[tool.poetry.scripts]
+[project.scripts]
 highlight = "highlight:cli"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.flit.module]
+name = "highlight"
