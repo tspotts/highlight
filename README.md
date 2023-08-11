@@ -16,6 +16,19 @@ Colorize text in your terminal :rainbow:
 ### Help:
 ```bash
   highlight --help
+```
 
-  <TODO>
+---
+
+### Dev Guide:
+```
+$ cd ~/development
+$ git clone git@github.com:tspotts/highlight.git
+$ cd ~/development/highlight
+
+$ pyenv virtualenv 3.10.12 highlight
+$ pyenv local highlight
+
+$ pip3 install --editable .
+  
 ```

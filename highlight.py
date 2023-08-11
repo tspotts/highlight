@@ -2,14 +2,12 @@ import re
 
 import click
 
-# TODO: limits opts to 1 or make multiple work?
-# TODO: flags for bright-mode, case insensitive regex
-# TODO: better docs
-# TODO: dev guide
+# TODO: ignore-case flag?
+# TODO: whole-line mode?
 
 
 class ValidRegexParamType(click.ParamType):
-    name = "regex"
+    name = "regex string to highlight"
 
     def convert(self, value, param, ctx):
         try:
@@ -21,42 +19,47 @@ class ValidRegexParamType(click.ParamType):
 VALID_REGEX = ValidRegexParamType()
 
 
-def apply_style(matchobj):
+@click.pass_context
+def apply_style(ctx, matchobj):
     key, value = matchobj.groupdict().popitem()
-    return click.style(value, fg=f"bright_{key}")
+    return click.style(value, fg=f"bright_{key}" if ctx.params["bright"] else key)
 
 
 @click.command()
 @click.version_option()
-@click.argument("input_file", type=click.File("rt"), default="-", )
-@click.option("--black", type=VALID_REGEX)
-@click.option("--blue", type=VALID_REGEX)
-@click.option("--cyan", type=VALID_REGEX)
-@click.option("--green", type=VALID_REGEX)
-@click.option("--magenta", type=VALID_REGEX)
-@click.option("--red", type=VALID_REGEX)
-@click.option("--white", type=VALID_REGEX)
-@click.option("--yellow", type=VALID_REGEX)
-def cli(input_file, black, blue, cyan, green, magenta, red, white, yellow):
+@click.argument("input_file", type=click.File("rt"), default="-")
+@click.option("--bright/--no-bright", default=True, help=f'{click.style("Enable", fg="bright_green")}/{click.style("Disable", fg="green")} bright mode.')
+@click.option("--black", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in black.", fg="bright_black"))
+@click.option("--blue", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in blue.", fg="bright_blue"))
+@click.option("--cyan", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in cyan.", fg="bright_cyan"))
+@click.option("--green", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in green.", fg="bright_green"))
+@click.option("--magenta", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in magenta.", fg="bright_magenta"))
+@click.option("--red", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in red.", fg="bright_red"))
+@click.option("--white", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in white.", fg="bright_white"))
+@click.option("--yellow", type=VALID_REGEX, multiple=True, metavar="<regex>", help=click.style("Regex to match text and highlight in yellow.", fg="bright_yellow"))
+def cli(input_file, bright, black, blue, cyan, green, magenta, red, white, yellow):
     """
-    Read from input file specified or stdin.
+    Read from the specified input file or from stdin. Regex matching and highlighting text based on options specified.
     """
     for line in input_file:
-        if black is not None:
-            line = black.sub(apply_style, line)
-        if blue is not None:
-            line = blue.sub(apply_style, line)
-        if cyan is not None:
-            line = cyan.sub(apply_style, line)
-        if green is not None:
-            line = green.sub(apply_style, line)
-        if magenta is not None:
-            line = magenta.sub(apply_style, line)
-        if red is not None:
-            line = red.sub(apply_style, line)
-        if white is not None:
-            line = white.sub(apply_style, line)
-        if yellow is not None:
-            line = yellow.sub(apply_style, line)
+        for opt in black:
+            line = opt.sub(apply_style, line)
+        for opt in blue:
+            line = opt.sub(apply_style, line)
+        for opt in cyan:
+            line = opt.sub(apply_style, line)
+        for opt in green:
+            line = opt.sub(apply_style, line)
+        for opt in magenta:
+            line = opt.sub(apply_style, line)
+        for opt in red:
+            line = opt.sub(apply_style, line)
+        for opt in white:
+            line = opt.sub(apply_style, line)
+        for opt in yellow:
+            line = opt.sub(apply_style, line)
 
         click.echo(line, nl=False)
+
+
+cli(max_content_width=150)
