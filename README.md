@@ -14,9 +14,7 @@ Colorize text in your terminal :rainbow:
 ```
 
 ### Help:
-```console
-  $ highlight --help
-```
+![highlight_help](https://github.com/tspotts/highlight/assets/14129425/959daabc-8df6-4141-8424-43925fdee571)
 
 ---
 
