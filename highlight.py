@@ -1,7 +1,7 @@
 import re
 
 import click
-# from auto_click_auto import enable_click_shell_completion_option
+from auto_click_auto import enable_click_shell_completion_option
 
 
 class ValidRegexParamType(click.ParamType):
@@ -29,7 +29,7 @@ def apply_style_line(ctx, color, text):
 
 
 @click.command()
-# @enable_click_shell_completion_option(program_name="highlight")
+@enable_click_shell_completion_option(program_name="highlight")
 @click.version_option()
 @click.argument("input_file", type=click.File("rt"), default="-")
 @click.option("--ignore-case/--no-ignore-case", default=True, help="Case insensitive regex matching. (Default=On)")

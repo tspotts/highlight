@@ -6,7 +6,7 @@ authors = [{ "name" = "Terry Spotts", "email" = "tspotts@etsy.com" }]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["click>=8.1", ]  # "auto-click-auto"] awaiting a fix for https://github.com/KAUTH/auto-click-auto/issues/4
+dependencies = ["click>=8.1", "auto-click-auto@git+https://github.com/taspotts/auto-click-auto"]  # "auto-click-auto"] awaiting a fix for https://github.com/KAUTH/auto-click-auto/issues/4
 
 [project.scripts]
 highlight = "highlight:cli"
