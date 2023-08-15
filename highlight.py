@@ -18,14 +18,12 @@ VALID_REGEX = ValidRegexParamType()
 
 
 @click.pass_context
-def apply_style_regex_capture(ctx, matchobj):
-    color, text = matchobj.groupdict().popitem()
-    return click.style(text, fg=f"bright_{color}" if ctx.params["bright"] else color, bold=ctx.params["bold"], reverse=ctx.params["reverse_mode"])
-
-
-@click.pass_context
-def apply_style_line(ctx, color, text):
-    return click.style(text, fg=f"bright_{color}" if ctx.params["bright"] else color, bold=ctx.params["bold"], reverse=ctx.params["reverse_mode"])
+def apply_style(ctx, color, text):
+    return click.style(text,
+                       fg=f"bright_{color}" if ctx.params["bright"] else color,
+                       bold=ctx.params["bold"],
+                       reverse=ctx.params["reverse_mode"],
+                       )
 
 
 @click.command()
@@ -63,9 +61,10 @@ def cli(input_file, ignore_case, line_mode, bold, bright, reverse_mode, black, b
             if line_mode:
                 if match := hl.search(line):
                     color, _ = match.groupdict().popitem()
-                    line = apply_style_line(color, line)
+                    line = apply_style(color, line)
             else:
-                line = hl.sub(apply_style_regex_capture, line)
+                # matchobj.groupdict() will unpack into color, text and get passed to apply_style
+                line = hl.sub(lambda matchobj: apply_style(*matchobj.groupdict().popitem()), line)
         click.echo(line, nl=False)
 
 
