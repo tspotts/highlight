@@ -42,5 +42,13 @@ jobs:
           --name=$(toml get pyproject.toml project.name --raw)
           --prefix=/opt/$(toml get pyproject.toml project.name --raw)
           --version=$(toml get pyproject.toml project.version --raw)
+          --after-install=after-install
+          --after-remove=after-remove
           $(find ./dist/*.whl)
-      - run: ls -lah
+      
+      - name: Upload .deb Package
+        uses: softprops/action-gh-release@v1
+        # if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: testing
+          files: *.deb

@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+import os
+from pathlib import Path
+
+TARGET_DIR = Path("/usr/local/bin")
+
+for executable in Path("/opt/highlight/bin/").glob("highlight*"):
+    if os.access(executable, os.X_OK):
+        print(f"Symlinking {executable} to {TARGET_DIR}/{executable.name}")
+        (TARGET_DIR / executable.name).symlink_to(executable)
