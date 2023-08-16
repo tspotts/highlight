@@ -3,19 +3,20 @@ name: Release
 on: push
 
 jobs:
-  build:
+  devtools:
     runs-on: ubuntu-22.04
     steps:
       
-      - name: Checkout
-        uses: actions/checkout@v3
+      # - name: Checkout
+        # uses: actions/checkout@v3
       
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
       
-      - uses: ruby/setup-ruby@v1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
       
@@ -27,5 +28,16 @@ jobs:
           pip3 install --upgrade pip setuptools build virtualenv virtualenv-tools3
           # apt install python-is-python3
 
-      - run: python3 --version
-      - run: python --version
+
+  build:
+    runs-on: ubuntu-22.04
+    needs: devtools
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - run: fpm --version
+      - run: python3 -m build
+      - run: ls -la
+      - run: ls -la dist
