@@ -22,13 +22,25 @@ jobs:
       
       - name: Install packaging tool
         run: gem install fpm
+
+      - name: Install toml-cli until we can refactor
+        run: cargo install toml-cli
       
       - name: Install build tools
         run: |
           pip3 install --upgrade pip setuptools build virtualenv virtualenv-tools3
-          # apt install python-is-python3
 
-      - run: fpm --version
-      - run: python3 -m build
-      - run: ls -la
-      - run: ls -la dist
+      - name: Build Python .whl 
+        run: python3 -m build
+
+      - name: Build .deb Package
+        run: >
+          fpm
+          --verbose
+          --input-type=virtualenv
+          --output-type=deb
+          --name=$(toml get pyproject.toml project.name --raw)
+          --prefix=/opt/$(toml get pyproject.toml project.name --raw)
+          --version=$(toml get pyproject.toml project.version --raw)
+          $(find ./dist/*.whl)
+      - run: ls -lah
