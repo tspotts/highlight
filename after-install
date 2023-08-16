@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+import os
+from pathlib import Path
+
+TARGET_DIR = Path("/usr/local/bin")
+
+for executable in Path("/opt/highlight/bin/").glob("highlight*"):
+    if os.access(executable, os.X_OK):
+        link = TARGET_DIR / executable.name
+        print(f"Removing symlink for {link}")
+        link.unlink(missing_ok=True)
+        print(f"Symlinking {executable} to {link}")
+        link.symlink_to(executable)
