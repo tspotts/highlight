@@ -41,7 +41,13 @@ jobs:
           --version=$(toml get --toml-path pyproject.toml project.version)
           --after-install=after-install
           --after-remove=after-remove
-          $(find ./dist/*.whl)
+          $(basename ./dist/*.whl)
+
+      - name: Test installing .deb
+        run: sudo apt-get install -yqq "./$(basename *.deb)"
+      
+      - name: Test removing .deb
+        run: sudo apt-get remove -yqq highlight      
       
       - name: Upload .deb Package
         uses: softprops/action-gh-release@v1
