@@ -41,7 +41,7 @@ jobs:
           --version=$(toml get --toml-path pyproject.toml project.version)
           --after-install=after-install
           --after-remove=after-remove
-          $(basename ./dist/*.whl)
+          $(find ./dist/*.whl)
 
       - name: Test installing .deb
         run: sudo apt-get install -yqq "./$(basename *.deb)"
